@@ -1,0 +1,61 @@
+﻿@model CompanyProfile
+
+<div class="neo-card shadow-lg rounded-4 mb-4 flex-grow-1">
+    <div class="card-body p-4 h-100 d-flex flex-column justify-content-between">
+        <div class="d-flex align-items-center mb-4">
+            <img src="@(string.IsNullOrEmpty(Model?.Logo) ? $"https://ui-avatars.com/api/?name={Model?.Name}&background=0D8ABC&color=fff" : Model?.Logo)"
+                 alt="@Model?.Name Logo"
+                 class="profile-logo me-3">
+            <div>
+                <h3 class="mb-1">@Model?.Name</h3>
+                <span class="badge bg-secondary">@Model?.FinnhubIndustry</span>
+            </div>
+            <a asp-controller="Stock" asp-action="RemoveFromPortfolio" asp-route-symbol="@Model?.Symbol" class="btn btn-outline-danger btn-sm ms-auto" data-company="@Model?.Name">
+                <i class="fa fa-trash"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+            <div class="d-flex align-items-stretch gap-3">
+                <div class="col-6 ">
+                    <div class="stat-box bg-light p-3 rounded-3">
+                        <small class="text-muted">Exchange</small>
+                        <div class="h6 mb-0">@Model?.Exchange</div>
+                    </div>
+                </div>
+                <div class="col-6 d-flex align-items-stretch">
+                    <div class="stat-box bg-light p-3 rounded-3">
+                        <small class="text-muted">Market Cap</small>
+                        <div class="h6 mb-0 text-success">$@(Model?.MarketCapitalization.ToString("N0"))</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <a asp-controller="Portfolio" asp-action="Details" asp-route-symbol="@Model?.Symbol"
+           class="btn btn-success w-100 mt-4">
+            View Stock Details
+        </a>
+    </div>
+</div>
+
+<style>
+    .profile-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+    }
+
+    .neo-card {
+        transition: all 0.3s ease;
+    }
+
+        .neo-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .stat-box:hover {
+        background-color: #f8f9fa !important;
+    }
+</style>

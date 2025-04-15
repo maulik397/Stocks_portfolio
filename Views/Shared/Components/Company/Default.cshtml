@@ -1,0 +1,44 @@
+﻿@model CompanyProfile
+<div class="neo-card shadow-lg rounded-4 mb-4" id="profile">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-4" style="min-height:65px">
+            <img src="@(string.IsNullOrEmpty(Model?.Logo) ? $"https://ui-avatars.com/api/?name={Model?.Symbol}&background=0D8ABC&color=fff" : Model?.Logo)" alt="@Model?.Name" class="profile-logo me-3">
+            <div>
+                <h3 class="mb-1">@Model?.Name</h3>
+                <span class="badge bg-secondary">@Model?.FinnhubIndustry</span>
+            </div>
+        </div>
+
+        <div class="row g-3 allstats">
+            <div class="col-md-6">
+                <div class="company-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Exchange</small>
+                    <div class="h5 mb-0">@Model?.Exchange</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="company-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Country</small>
+                    <div class="h5 mb-0">@Model?.Country</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="company-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Currency</small>
+                    <div class="h5 mb-0">@Model?.Currency</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="company-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">IPO Date</small>
+                    <div class="h5 mb-0">@DateTime.Parse(Model?.Ipo).ToString("MMM dd, yyyy")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <small class="text-muted d-block">Market Capitalization</small>
+            <div class="market-cap-value h3">$@(Model?.MarketCapitalization.ToString("N0"))</div>
+        </div>
+    </div>
+</div>

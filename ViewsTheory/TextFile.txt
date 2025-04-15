@@ -1,0 +1,51 @@
+﻿how views works in mvc 
+
+controller invoke the views views dont talk back to controller it invoke model object 
+
+.cshtml  razor views 
+
+Views/Shared/ is a special folder where you store reusable views that can be used across all controllers and views in your project. 
+		this folder contain 
+			
+				File										Purpose
+				_Layout.cshtml										Main HTML layout used by all views (@RenderBody()) insde this u write @renderbody to add components  
+				_ValidationScriptsPartial.cshtml					jQuery validation scripts for forms
+				_ViewImports.cshtml									Common Razor directives like @using, @addTagHelper
+				Partial Views (_Card.cshtml, _Header.cshtml, etc.)	Reusable UI components
+
+
+how renderbody got replaced  ? 
+
+ Step	What Happens
+1️⃣	User hits browser URL: /stocks/index
+2️⃣	ASP.NET Core routing matches this to StocksController.Index()
+3️⃣	Controller executes and hits: return View();
+4️⃣	Razor looks for a view with the same name as the action: Index.cshtml
+→ Location searched: Views/Stocks/Index.cshtml
+5️⃣	Razor checks _ViewStart.cshtml to see if a layout is specified
+→ Layout = "_Layout" = use Views/Shared/_Layout.cshtml
+6️⃣	Razor renders Views/Stocks/Index.cshtml → outputs HTML like <h1>...
+7️⃣	Razor then loads _Layout.cshtml
+8️⃣	It finds @RenderBody() and replaces it with the HTML from Index.cshtml
+9️⃣	The final output is merged HTML from layout + view
+🔟	ASP.NET Core sends this final HTML back to the browser
+
+
+
+how to invoke partail views  ? 
+
+	1)  <partial name="_StockCard" model="Model.Stock" />
+	2) @await Html.PartialAsync("_StockCard", stock)
+	3) Html.partial("_viewname ", modename )
+	4) 
+
+
+
+
+
+	Why Use @RenderSection? 
+Use Case	                       Why It’s Useful
+Adding view-specific JS	             Each view can include custom <script> tags
+Adding modals/popups	             Only certain views need them
+Injecting extra CSS	                 For views with special styles
+Conditional footers,alerts	         Add parts only when needed

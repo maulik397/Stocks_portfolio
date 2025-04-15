@@ -1,0 +1,106 @@
+﻿@model BasicCompanyFinancials
+<div class="neo-card shadow-lg rounded-4 mb-4" id="finance">
+    <div class="card-body p-4">
+        <div class="d-flex align-items-center mb-4">
+            <img src="@(string.IsNullOrEmpty(Model?.Logo) ? $"https://ui-avatars.com/api/?name={Model?.Name}&background=0D8ABC&color=fff" : Model?.Logo)"
+                 alt="@Model?.Name Logo"
+                 class="profile-logo me-3">
+            <div>
+                <h3 class="mb-1">@Model?.Name</h3>
+                <span class="badge bg-secondary">@Model?.FinnhubIndustry</span>
+            </div>
+        </div>
+
+
+        <div class="row g-3 allstats">
+            <div class="text-center mb-3">
+                <span class="badge bg-success px-3 py-2">β  @Model?.Beta?.ToString("0.00")</span>
+            </div>
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block">52 Week High</small>
+                            <div class="h5 mb-0 text-success">
+                                $@Model?.WeekHigh52
+                            </div>
+                        </div>
+                        <small class="text-muted">@DateTime.Parse(Model?.WeekHighDate52 ?? "01/01/2000").ToString("MMM dd, yyyy")</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <small class="text-muted d-block">52 Week Low</small>
+                            <div class="h5 mb-0 text-danger">$@Model?.WeekLow52</div>
+                        </div>
+                        <small class="text-muted">@DateTime.Parse(Model?.WeekLowDate52 ?? "01/01/2000").ToString("MMM dd, yyyy")</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Market Cap</small>
+                    <div class="h5 mb-0">$@(Model?.MarketCap?.ToString("N0"))</div>
+                </div>
+            </div>
+           
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">IPO Date</small>
+                    <div class="h5 mb-0">@DateTime.Parse(Model?.Ipo ?? "01/01/2000").ToString("MMM dd, yyyy")</div>
+                </div>
+            </div>
+            <!-- Revenue and Earnings -->
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Revenue Growth (3Y)</small>
+                    <div class="h5 mb-0">@Model?.RevenueGrowth3Y?.ToString("0.00") %</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">EPS Growth (3Y)</small>
+                    <div class="h5 mb-0">@Model?.EpsGrowth3Y?.ToString("0.00") %</div>
+                </div>
+            </div>
+
+            <!-- Profitability -->
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Gross Margin</small>
+                    <div class="h5 mb-0">@Model?.GrossMarginAnnual?.ToString("0.00") %</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Operating Margin</small>
+                    <div class="h5 mb-0">@Model?.OperatingMarginAnnual?.ToString("0.00") %</div>
+                </div>
+            </div>
+
+            <!-- Valuation -->
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">P/E Ratio</small>
+                    <div class="h5 mb-0">@Model?.PeTTM?.ToString("0.00")</div>
+                </div>
+            </div>
+
+            <!-- Liquidity -->
+            <div class="col-md-6">
+                <div class="finance-stats p-3 rounded-3 bg-light">
+                    <small class="text-muted d-block mb-1">Quick Ratio</small>
+                    <div class="h5 mb-0">@Model?.QuickRatioQuarterly?.ToString("0.00")</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <small class="text-muted d-block">Market Capitalization</small>
+            <div class="market-cap-value h3">$@(Model?.MarketCapitalization.ToString("N0"))</div>
+        </div>
+    </div>
+</div>

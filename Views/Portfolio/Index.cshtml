@@ -1,0 +1,194 @@
+﻿@* Views/Portfolio/Index.cshtml *@
+@model List<CompanyProfile>
+@{
+    ViewData["Title"] = "My Portfolio";
+
+    if (TempData["Message"]?.ToString() != null)
+    {
+        <div class="d-flex justify-content-end">
+            <div class="toast align-items-center text-white bg-danger" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body fw-bolder">
+                        @TempData["Message"]?.ToString()
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto fw-bolder" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+
+<div class="container-fluid py-4">
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">My Portfolio</h1>
+            <p class="text-muted">Track your favorite companies</p>
+        </div>
+        <div class="d-flex gap-3">
+            <div class="position-relative">
+                <input type="text"
+                       class="form-control search-input"
+                       placeholder="Search companies..."
+                       id="portfolioSearch" />
+                <i class="bi bi-search position-absolute top-50 translate-middle-y"
+                   style="right: 15px;"></i>
+            </div>
+            @* <div class="btn-group"> *@
+            @*     <button class="btn btn-outline-success"> *@
+            @*         <i class="bi bi-funnel"></i> *@
+            @*         Filter *@
+            @*     </button> *@
+            @*     <button class="btn btn-outline-success"> *@
+            @*         <i class="bi bi-sort-down"></i> *@
+            @*         Sort *@
+            @*     </button> *@
+            @* </div> *@
+        </div>
+    </div>
+
+    <!-- Portfolio Summary Cards -->
+    <div class="row g-4 mb-4 d-flex">
+        <div class="col-xl-4 col-lg-6 col-12 flex-grow-1">
+            <div class="neo-card p-4 rounded-4">
+                <small class="text-muted d-block mb-1">Total Companies</small>
+                <h3 class="mb-0 fw-bold">@Model.Count()</h3>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-12 flex-grow-1">
+            <div class="neo-card p-4 rounded-4">
+                <small class="text-muted d-block mb-1">Industries</small>
+                <h3 class="mb-0 fw-bold">@Model.Select(x => x.FinnhubIndustry).Distinct().Count()</h3>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-6 col-12 flex-grow-1">
+            <div class="neo-card p-4 rounded-4">
+                <small class="text-muted d-block mb-1">Total Market Cap</small>
+                <h3 class="mb-0 fw-bold text-success">
+                    $@(Model.Sum(x => x.MarketCapitalization).ToString("N0"))
+                </h3>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Company Cards Grid -->
+    @if (Model.Any())
+    {
+        <div class="row g-4 ">
+            @foreach (var company in Model)
+            {
+                <div class="company-card col-xl-4 col-lg-6 col-12 d-flex align-items-stretch">
+                    <partial name="_CompanyProfileCard" model="company" />
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5">
+            <img src="https://ui-avatars.com/api/?name=Empty&size=128&background=0D8ABC&color=fff"
+                 alt="Empty Portfolio"
+                 class="mb-4"
+                 style="opacity: 0.5;" />
+            <h3>Your Portfolio is Empty</h3>
+            <p class="text-muted">Start by adding companies to your portfolio</p>
+            <a href="/" class="btn btn-success px-4">
+                <i class="bi bi-plus-lg me-2"></i>
+                Add Companies
+            </a>
+        </div>
+    }
+</div>
+
+<style>
+    .neo-card {
+        background: white;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    }
+
+        .neo-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+        }
+
+    .search-input {
+        padding: 0.6rem 2.5rem 0.6rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(0,0,0,0.1);
+        width: 300px;
+    }
+
+    .profile-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        object-fit: cover;
+    }
+        .search-input:focus {
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+            border-color: green;
+        }
+
+    .company-card {
+        transition: all 0.3s ease;
+    }
+
+        .company-card:hover {
+            transform: translateY(-5px);
+        }
+
+    @@media (max-width: 768px) {
+        .d-flex.gap-3
+
+    {
+        flex-direction: column;
+        gap: 1rem !important;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+    .btn-group {
+        width: 100%;
+    }
+
+        .btn-group .btn {
+            flex: 1;
+        }
+
+    }
+</style>
+
+@section Scripts {
+
+    <script>
+        var toastElement = document.querySelector('.toast');
+        if (toastElement) {
+            var toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+
+
+        document.getElementById('portfolioSearch').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // console.log(searchTerm);
+            document.querySelectorAll('.company-card').forEach(card => {
+                const companyName = card.querySelector('h3').textContent.toLowerCase();
+                const companyIndustry = card.querySelector('.badge').textContent.toLowerCase();
+                // console.log(companyName, companyIndustry);
+                if (companyName.includes(searchTerm) || companyIndustry.includes(searchTerm)) {
+                    card.classList.remove("d-none");
+                    card.classList.add("d-flex");
+                } else {
+                    card.classList.remove("d-flex");
+                    card.classList.add("d-none");
+                }
+            });
+        });
+    </script>
+}

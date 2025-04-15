@@ -1,0 +1,218 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@section Styles {
+    <style>
+        *{
+            box-sizing : border-box;
+        }
+        .neo-card {
+            background: white;
+            border: none;
+            position: relative;
+            transition: all 0.3s ease;
+            min-height: 425px;
+        }
+
+        .allstats{
+            height:220px;
+            overflow:auto;
+        }
+
+        .profile-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .stat-container, .company-stats {
+            transition: all 0.3s ease;
+        }
+
+        .stat-container:hover, .company-stats:hover {
+            background-color: #f8f9fa !important;
+            transform: translateY(-2px);
+        }
+
+        .price-display {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .market-cap-value {
+            color: #198754;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 0.5em 1em;
+            font-weight: 500;
+        }
+
+        .search-container {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .search-container:focus-within {
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15) !important;
+            border-color: #198754;
+        }
+
+        .form-control {
+            padding: 0.8rem 1.2rem;
+            font-size: 1.1rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                box-shadow: none;
+                border-color: #198754;
+            }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+            .btn:hover {
+                transform: translateX(3px);
+            }
+
+
+        .cardx-container {
+            perspective: 1000px;
+            min-height: 60vh;
+        }
+
+        .cardx {
+            width: 100%;
+            min-height: 300px;
+            max-height: 80vh;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+        }
+
+            .cardx .cardx-front,
+            .cardx .cardx-back {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                backface-visibility: hidden;
+            }
+
+        .cardx-front {
+        }
+
+        .cardx-back {
+            transform: rotateY(180deg);
+        }
+
+        .cardx.flipped {
+            transform: rotateY(180deg);
+        }
+
+
+        /* @@media (max-width: 768px) { */
+        /* .search-container */
+
+        /* { */
+        /*     margin: 0 1rem; */
+        /* } */
+
+        /* } */
+
+       
+    </style>
+}
+
+
+<div class="container my-3">
+    <div class="row justify-content-center my-4">
+        <div class="col-12">
+            <div class="search-container p-4 rounded-4 shadow-sm bg-white">
+                <label for="stockSymbolInput" class="form-label mb-3 fw-semibold">
+                    <i class="bi bi-search me-2"></i>Search Stock Symbol
+                </label>
+                <div class="input-group">
+                    <input type="text"
+                           id="stockSymbolInput"
+                           class="form-control form-control-lg border-end-0"
+                           placeholder="e.g. AAPL, MSFT, GOOGL ,NVDA "
+                           autocomplete="off" />
+                    <button class="btn btn-success px-4" type="button" id="stockSymbolButton">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+                <small class="text-muted mt-2 d-block">
+                    Enter a valid stock symbol to view detailed information
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-4 d-flex flex-md-row flex-column align-items-stretch gap-3" >
+        <div class="col-md-6 col-12 cardx-container">
+            <div class="cardx w-100">
+                <div id="companyInfoContainer" class="cardx-front">
+                    @await Component.InvokeAsync("Company", "MSFT")
+                </div>
+                <div id="companyFinancesInfoContainer" class="cardx-back">
+                    @await Component.InvokeAsync("CompanyFinancials", "MSFT")
+                </div>
+            </div>
+        </div>
+        <div id="stockInfoContainer" class="flex-grow-1">
+            @await Component.InvokeAsync("Stock", "MSFT")
+        </div>
+    </div>
+    
+</div>
+
+@section Scripts {
+    <script>
+       
+        $(document).ready(function () {
+            $('.cardx').on('mouseenter', function() {
+              $(this).addClass('flipped');
+            });
+
+            $('.cardx').on('mouseleave', function() {
+              $(this).removeClass('flipped');
+            });
+            $('#stockSymbolButton').on('click', function () {
+                var stockSymbol = $('#stockSymbolInput').val();
+                stockSymbol = stockSymbol.toUpperCase();
+                if (stockSymbol.trim()) {
+                    fetch('/Stock/GetStockInfo/' + encodeURIComponent(stockSymbol))
+                        .then(response => response.text()) 
+                        .then(html => {
+                            $('#stockInfoContainer').html(html);
+                        })
+                        .catch(error => {
+                            console.error("There was an error with the fetch request:", error);
+                        });
+                    fetch('/Stock/GetCompanyProfile/' + encodeURIComponent(stockSymbol))
+                        .then(response => response.text())
+                        .then(html => {
+                            $('#companyInfoContainer').html(html);
+                        })
+                        .catch(error => {
+                            console.error("There was an error with the fetch request:", error);
+                        });
+                    fetch('/Stock/GetCompanyFinance/' + encodeURIComponent(stockSymbol))
+                        .then(response => response.text())
+                        .then(html => {
+                            $('#companyFinancesInfoContainer').html(html);
+                        })
+                        .catch(error => {
+                            console.error("There was an error with the fetch request:", error);
+                        });
+                }
+            });
+        });
+    </script>
+}

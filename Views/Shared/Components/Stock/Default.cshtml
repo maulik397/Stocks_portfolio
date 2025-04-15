@@ -1,0 +1,39 @@
+﻿@model Stock
+<div class="neo-card shadow-lg rounded-4 mb-4">
+    <div class="card-body border-0 p-4">
+        <div class="text-center mb-3">
+            <h3 class="mb-3">Stock Information</h3>
+            <span class="badge bg-success px-3 py-2">@Model?.StockSymbol?.ToUpper()</span>
+        </div>
+
+        <div class="text-center mb-4">
+            <div class="price-display h2">$@Model?.CurrentPrice?.ToString("0.00")</div>
+            <small class="text-muted">Current Price</small>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="stat-container text-center p-3 rounded-3 bg-light">
+                    <div class="stat-label text-muted mb-1">Today's Highest</div>
+                    <div class="stat-value fw-bold">$@Model?.HighestPrice?.ToString("0.00")</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-container text-center p-3 rounded-3 bg-light">
+                    <div class="stat-label text-muted mb-1">Today's Lowest</div>
+                    <div class="stat-value fw-bold">$@Model?.LowestPrice?.ToString("0.00")</div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-container text-center p-3 rounded-3 bg-light">
+                    <div class="stat-label text-muted mb-1">Opened AT</div>
+                    <div class="stat-value fw-bold">$@Model?.OpenPrice?.ToString("0.00")</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center p-4 border-0">
+        <a asp-controller="Stock" asp-action="AddToPortfolio" asp-route-symbol="@Model?.StockSymbol" class="btn btn-success btn-lg px-4">Add To Portfolio</a>
+    </div>
+</div>

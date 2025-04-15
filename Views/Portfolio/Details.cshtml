@@ -1,0 +1,270 @@
+﻿@model CompanyDetailsViewModel
+
+@section Styles{
+    <style>
+        .neo-card {
+            background: white;
+            border: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+        }
+
+            .neo-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            }
+
+        .search-input {
+            padding: 0.6rem 2.5rem 0.6rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid rgba(0,0,0,0.1);
+            width: 300px;
+        }
+
+            .search-input:focus {
+                box-shadow: none;
+                border-color: #0d6efd;
+            }
+
+        .company-card {
+            transition: all 0.3s ease;
+        }
+
+            .company-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .profile-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        @@media (max-width: 768px) {
+            .d-flex.gap-3 {
+                flex-direction: column;
+                gap: 1rem !important;
+            }
+
+            .search-input {
+                width: 100%;
+            }
+
+            .btn-group {
+                width: 100%;
+            }
+
+                .btn-group .btn {
+                    flex: 1;
+                }
+        }
+    </style>
+}
+@{
+    ViewData["Title"] = "Details - " + Model.CompanyProfile?.Name.ToString();
+}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">@Model.CompanyProfile?.Name Details</h1>
+            <p class="text-muted">Track your favorite company details</p>
+        </div>
+        
+    </div>
+
+    <div class="d-flex gap-3">
+
+        <!-- Company Profile Section -->
+        <div class="neo-card shadow-lg rounded-4 mb-4 col-md-6" id="profile">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4" style="min-height:65px">
+                    <img src="@(string.IsNullOrEmpty(Model.CompanyProfile?.Logo) ? $"https://ui-avatars.com/api/?name={Model.CompanyProfile?.Symbol}&background=0D8ABC&color=fff" : Model.CompanyProfile?.Logo)" alt="@Model.CompanyProfile?.Name" class="profile-logo me-3">
+                    <div>
+                        <h3 class="mb-1">@Model.CompanyProfile?.Name</h3>
+                        <span class="badge bg-secondary">@Model.CompanyProfile?.FinnhubIndustry</span>
+                    </div>
+                </div>
+
+                <div class="row g-3 allstats mb-3">
+                    <div class="text-center mb-3">
+                        <span class="badge bg-success px-3 py-2">β  @Model.BasicCompanyFinancials?.Beta?.ToString("0.00")</span>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="company-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Exchange</small>
+                            <div class="h5 mb-0">@Model.CompanyProfile?.Exchange</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="company-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Country</small>
+                            <div class="h5 mb-0">@Model.CompanyProfile?.Country</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="company-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Currency</small>
+                            <div class="h5 mb-0">@Model.CompanyProfile?.Currency</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="company-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">IPO Date</small>
+                            <div class="h5 mb-0">@DateTime.Parse(Model?.CompanyProfile?.Ipo ?? "01/01/2000").ToString("MMM dd, yyyy")</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row g-3 allstats">
+
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted d-block">52 Week High</small>
+                                    <div class="h5 mb-0 text-success">
+                                        $@Model?.BasicCompanyFinancials?.WeekHigh52
+                                    </div>
+                                </div>
+                                <small class="text-muted">@DateTime.Parse(Model?.BasicCompanyFinancials?.WeekHighDate52 ?? "01/01/2000").ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted d-block">52 Week Low</small>
+                                    <div class="h5 mb-0 text-danger">$@Model?.BasicCompanyFinancials?.WeekLow52</div>
+                                </div>
+                                <small class="text-muted">@DateTime.Parse(Model?.BasicCompanyFinancials?.WeekLowDate52 ?? "01/01/2000").ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Other financial details here... -->
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Market Cap</small>
+                            <div class="h5 mb-0">$@(Model?.BasicCompanyFinancials?.MarketCap?.ToString("N0"))</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">IPO Date</small>
+                            <div class="h5 mb-0">@DateTime.Parse(Model?.BasicCompanyFinancials?.Ipo ?? "01/01/2000").ToString("MMM dd, yyyy")</div>
+                        </div>
+                    </div>
+                    <!-- Revenue and Earnings -->
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Revenue Growth (3Y)</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.RevenueGrowth3Y?.ToString("0.00") %</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">EPS Growth (3Y)</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.EpsGrowth3Y?.ToString("0.00") %</div>
+                        </div>
+                    </div>
+
+                    <!-- Profitability -->
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Gross Margin</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.GrossMarginAnnual?.ToString("0.00") %</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Operating Margin</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.OperatingMarginAnnual?.ToString("0.00") %</div>
+                        </div>
+                    </div>
+
+                    <!-- Valuation -->
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">P/E Ratio</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.PeTTM?.ToString("0.00")</div>
+                        </div>
+                    </div>
+
+                    <!-- Liquidity -->
+                    <div class="col-md-6">
+                        <div class="finance-stats p-3 rounded-3 bg-light">
+                            <small class="text-muted d-block mb-1">Quick Ratio</small>
+                            <div class="h5 mb-0">@Model?.BasicCompanyFinancials?.QuickRatioQuarterly?.ToString("0.00")</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4 text-center">
+                    <small class="text-muted d-block">Market Capitalization</small>
+                    <div class="market-cap-value text-success h3">$@(Model?.CompanyProfile?.MarketCapitalization.ToString("N0"))</div>
+                </div>
+            </div>
+        </div>
+
+        @* <!-- Basic Company Financials Section --> *@
+        @* <div class="neo-card shadow-lg rounded-4 mb-4" id="finance"> *@
+        @*     <div class="card-body p-4"> *@
+        @*         <div class="d-flex align-items-center mb-4"> *@
+        @*             <img src="@(string.IsNullOrEmpty(Model.BasicCompanyFinancials?.Logo) ? $"https://ui-avatars.com/api/?name={Model.BasicCompanyFinancials?.Name}&background=0D8ABC&color=fff" : Model.BasicCompanyFinancials?.Logo)" *@
+        @*                  alt="@Model.BasicCompanyFinancials?.Name Logo" *@
+        @*                  class="profile-logo me-3"> *@
+        @*             <div> *@
+        @*                 <h3 class="mb-1">@Model.BasicCompanyFinancials?.Name</h3> *@
+        @*                 <span class="badge bg-secondary">@Model.BasicCompanyFinancials?.FinnhubIndustry</span> *@
+        @*             </div> *@
+        @*         </div> *@
+
+
+
+        @*         <div class="mt-4 text-center"> *@
+        @*             <small class="text-muted d-block">Market Capitalization</small> *@
+        @*             <div class="market-cap-value h3">$@(Model.BasicCompanyFinancials?.MarketCapitalization.ToString("N0"))</div> *@
+        @*         </div> *@
+        @*     </div> *@
+        @* </div> *@
+
+        <!-- Stock Information Section -->
+        <div class="neo-card shadow-lg rounded-4 mb-4 col-md-6">
+            <div class="card-body border-0 p-4">
+                <div class="text-center mb-3">
+                    <h3 class="mb-3">Stock Information</h3>
+                    <span class="badge bg-success px-3 py-2">@Model?.Stock.StockSymbol.ToUpper()</span>
+                </div>
+
+                <div class="text-center mb-4">
+                    <div class="price-display text-success h2">$@Model?.Stock.CurrentPrice?.ToString("0.00")</div>
+                    <small class="text-muted">Current Price</small>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="stat-container text-center p-3 rounded-3 bg-light">
+                            <div class="stat-label text-muted mb-1">Highest</div>
+                            <div class="stat-value fw-bold">$@Model?.Stock.HighestPrice?.ToString("0.00")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-container text-center p-3 rounded-3 bg-light">
+                            <div class="stat-label text-muted mb-1">Lowest</div>
+                            <div class="stat-value fw-bold">$@Model?.Stock.LowestPrice?.ToString("0.00")</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-container text-center p-3 rounded-3 bg-light">
+                            <div class="stat-label text-muted mb-1">Open</div>
+                            <div class="stat-value fw-bold">$@Model?.Stock.OpenPrice?.ToString("0.00")</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
