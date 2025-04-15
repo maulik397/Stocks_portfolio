@@ -26,6 +26,8 @@ tools/
 
 ## ASP.NET Core secret files
 secrets.json
+appsettings.json
+appsettings.Development.json
 
 ## Logs
 *.log
